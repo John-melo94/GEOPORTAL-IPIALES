@@ -60,6 +60,7 @@
       display: flex;
       flex: 1;
       overflow: hidden;
+      position: relative;
     }
     .side-panel {
       width: 280px;
@@ -68,6 +69,7 @@
       padding: 1rem;
       overflow-y: auto;
       transition: transform 0.3s ease;
+      z-index: 1000;
     }
     .side-panel.hidden {
       transform: translateX(-100%);
@@ -86,10 +88,10 @@
       }
       .side-panel {
         position: absolute;
-        top: 56px;
+        top: 0;
         bottom: 0;
         left: 0;
-        z-index: 999;
+        z-index: 1000;
         background: var(--blanco);
         box-shadow: 2px 0 10px rgba(0,0,0,0.2);
       }
@@ -150,6 +152,24 @@
       border-radius: 4px;
       margin-top: 0.5rem;
     }
+    .panel-toggle {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      z-index: 999;
+      background: var(--verde-medio);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 8px;
+      display: none;
+      cursor: pointer;
+    }
+    @media (max-width: 768px) {
+      .panel-toggle {
+        display: block;
+      }
+    }
   </style>
 </head>
 <body>
@@ -169,6 +189,7 @@
     </div>
   </header>
   <div class="main-container">
+    <button class="panel-toggle" id="panelToggle"><i class="fas fa-bars"></i></button>
     <aside class="side-panel" id="sidePanel">
       <div class="panel-section">
         <h3><i class="fas fa-search"></i> BÚSQUEDA AVANZADA</h3>
@@ -229,6 +250,14 @@
   <script>
     document.getElementById("toggle-menu").addEventListener("click", function() {
       document.getElementById("sidePanel").classList.toggle("hidden");
+    });
+
+    // Nuevo código para el botón de toggle del panel
+    const panelToggle = document.getElementById("panelToggle");
+    const sidePanel = document.getElementById("sidePanel");
+    
+    panelToggle.addEventListener("click", function() {
+      sidePanel.classList.toggle("hidden");
     });
 
     document.getElementById("fullscreen-btn").addEventListener("click", () => {
