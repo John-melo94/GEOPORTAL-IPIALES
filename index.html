@@ -60,7 +60,6 @@
       display: flex;
       flex: 1;
       overflow: hidden;
-      position: relative;
     }
     .side-panel {
       width: 280px;
@@ -69,7 +68,6 @@
       padding: 1rem;
       overflow-y: auto;
       transition: transform 0.3s ease;
-      z-index: 1000;
     }
     .side-panel.hidden {
       transform: translateX(-100%);
@@ -94,6 +92,10 @@
         z-index: 1000;
         background: var(--blanco);
         box-shadow: 2px 0 10px rgba(0,0,0,0.2);
+        transform: translateX(-100%);
+      }
+      .side-panel.visible {
+        transform: translateX(0);
       }
       #toggle-menu {
         display: block;
@@ -152,24 +154,6 @@
       border-radius: 4px;
       margin-top: 0.5rem;
     }
-    .panel-toggle {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      z-index: 999;
-      background: var(--verde-medio);
-      color: white;
-      border: none;
-      border-radius: 4px;
-      padding: 8px;
-      display: none;
-      cursor: pointer;
-    }
-    @media (max-width: 768px) {
-      .panel-toggle {
-        display: block;
-      }
-    }
   </style>
 </head>
 <body>
@@ -189,7 +173,6 @@
     </div>
   </header>
   <div class="main-container">
-    <button class="panel-toggle" id="panelToggle"><i class="fas fa-bars"></i></button>
     <aside class="side-panel" id="sidePanel">
       <div class="panel-section">
         <h3><i class="fas fa-search"></i> BÚSQUEDA AVANZADA</h3>
@@ -248,57 +231,68 @@
   <script src="./resources/Autolinker.min.js"></script>
   <script src="./resources/qgis2web.js"></script>
   <script>
-    document.getElementById("toggle-menu").addEventListener("click", function() {
-      document.getElementById("sidePanel").classList.toggle("hidden");
-    });
+    document.addEventListener('DOMContentLoaded', function() {
+      const sidePanel = document.getElementById('sidePanel');
+      const toggleMenu = document.getElementById('toggle-menu');
+      
+      // Inicializar el panel como oculto en móviles
+      if (window.innerWidth <= 768) {
+        sidePanel.classList.remove('hidden');
+        sidePanel.classList.add('visible');
+      }
+      
+      toggleMenu.addEventListener('click', function() {
+        sidePanel.classList.toggle('visible');
+      });
 
-    // Nuevo código para el botón de toggle del panel
-    const panelToggle = document.getElementById("panelToggle");
-    const sidePanel = document.getElementById("sidePanel");
-    
-    panelToggle.addEventListener("click", function() {
-      sidePanel.classList.toggle("hidden");
-    });
+      // Asegurarse de que el mapa se redibuje cuando se muestra/oculta el panel
+      sidePanel.addEventListener('transitionend', function() {
+        if (window.olMap) {
+          window.olMap.updateSize();
+        }
+      });
 
-    document.getElementById("fullscreen-btn").addEventListener("click", () => {
-      if (!document.fullscreenElement) document.documentElement.requestFullscreen();
-      else document.exitFullscreen();
-    });
+      document.getElementById("fullscreen-btn").addEventListener("click", () => {
+        if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+        else document.exitFullscreen();
+      });
 
-    const source = new ol.source.Vector();
-    const drawLayer = new ol.layer.Vector({ source: source });
-    const map = new ol.Map({
-      target: 'map',
-      layers: [
-        new ol.layer.Tile({ source: new ol.source.OSM() }),
-        drawLayer
-      ],
-      view: new ol.View({ center: ol.proj.fromLonLat([-77.64, 0.83]), zoom: 13 })
-    });
+      const source = new ol.source.Vector();
+      const drawLayer = new ol.layer.Vector({ source: source });
+      const map = new ol.Map({
+        target: 'map',
+        layers: [
+          new ol.layer.Tile({ source: new ol.source.OSM() }),
+          drawLayer
+        ],
+        view: new ol.View({ center: ol.proj.fromLonLat([-77.64, 0.83]), zoom: 13 })
+      });
+      window.olMap = map;
 
-    let drawInteraction;
+      let drawInteraction;
 
-    document.getElementById("measure-btn").addEventListener("click", () => {
-      map.removeInteraction(drawInteraction);
-      drawInteraction = new ol.interaction.Draw({ source, type: 'LineString' });
-      map.addInteraction(drawInteraction);
-    });
+      document.getElementById("measure-btn").addEventListener("click", () => {
+        map.removeInteraction(drawInteraction);
+        drawInteraction = new ol.interaction.Draw({ source, type: 'LineString' });
+        map.addInteraction(drawInteraction);
+      });
 
-    document.getElementById("area-btn").addEventListener("click", () => {
-      map.removeInteraction(drawInteraction);
-      drawInteraction = new ol.interaction.Draw({ source, type: 'Polygon' });
-      map.addInteraction(drawInteraction);
-    });
+      document.getElementById("area-btn").addEventListener("click", () => {
+        map.removeInteraction(drawInteraction);
+        drawInteraction = new ol.interaction.Draw({ source, type: 'Polygon' });
+        map.addInteraction(drawInteraction);
+      });
 
-    document.getElementById("draw-btn").addEventListener("click", () => {
-      map.removeInteraction(drawInteraction);
-      drawInteraction = new ol.interaction.Draw({ source, type: 'Point' });
-      map.addInteraction(drawInteraction);
-    });
+      document.getElementById("draw-btn").addEventListener("click", () => {
+        map.removeInteraction(drawInteraction);
+        drawInteraction = new ol.interaction.Draw({ source, type: 'Point' });
+        map.addInteraction(drawInteraction);
+      });
 
-    document.getElementById("clear-btn").addEventListener("click", () => {
-      source.clear();
-      map.removeInteraction(drawInteraction);
+      document.getElementById("clear-btn").addEventListener("click", () => {
+        source.clear();
+        map.removeInteraction(drawInteraction);
+      });
     });
   </script>
 </body>
