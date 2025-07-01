@@ -28,6 +28,8 @@
       justify-content: space-between;
       align-items: center;
       padding: 0.5rem 1rem;
+      position: relative;
+      z-index: 1001;
     }
     .logo-container {
       display: flex;
@@ -60,6 +62,7 @@
       display: flex;
       flex: 1;
       overflow: hidden;
+      position: relative;
     }
     .side-panel {
       width: 280px;
@@ -79,6 +82,7 @@
       color: white;
       font-size: 1.5rem;
       margin-right: 0.5rem;
+      z-index: 1002;
     }
     @media (max-width: 768px) {
       .main-container {
@@ -86,7 +90,7 @@
       }
       .side-panel {
         position: absolute;
-        top: 0;
+        top: 56px; /* Ajustado para que quede debajo del header */
         bottom: 0;
         left: 0;
         z-index: 1000;
