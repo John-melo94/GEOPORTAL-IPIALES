@@ -1,595 +1,276 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <title>Geoportal Municipal de Ipiales</title>
-    
-    <!-- Fuentes y iconos -->
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Geoportal Municipal de Ipiales</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
     :root {
-        --primary-dark: #1e3f20; /* Verde oscuro institucional */
-        --primary-medium: #2e7d32; /* Verde principal */
-        --primary-light: #4caf50; /* Verde claro */
-        --accent-red: #c62828; /* Rojo institucional */
-        --accent-dark: #212121; /* Negro para textos */
-        --light-bg: #f5f5f5; /* Fondo claro */
-        --panel-bg: rgba(255,255,255,0.95); /* Panel traslúcido */
-        --gold-accent: #d4af37; /* Dorado para detalles */
+      --verde-oscuro: #1e3f20;
+      --verde-medio: #2e7d32;
+      --rojo: #c62828;
+      --blanco: #ffffff;
+      --gris-claro: #f5f5f5;
     }
-    
     body {
-        margin: 0;
-        padding: 0;
-        font-family: 'Lato', sans-serif;
-        color: var(--accent-dark);
-        background-color: var(--light-bg);
-        height: 100vh;
-        display: grid;
-        grid-template-rows: auto 1fr;
-        overflow: hidden;
+      margin: 0;
+      font-family: 'Montserrat', sans-serif;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
-    
-    /* Header institucional */
     header {
-        background: linear-gradient(to right, var(--primary-dark), var(--primary-medium));
-        color: white;
-        padding: 0.8rem 2rem;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        position: relative;
-        z-index: 100;
+      background: linear-gradient(to right, var(--verde-oscuro), var(--verde-medio));
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 1rem;
     }
-    
     .logo-container {
-        display: flex;
-        align-items: center;
-        gap: 15px;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
     }
-    
-    .logo-icon {
-        font-size: 2rem;
-        color: white;
+    .logo-container i {
+      font-size: 1.5rem;
     }
-    
     .logo-text {
-        font-family: 'Montserrat', sans-serif;
-        text-transform: uppercase;
+      display: flex;
+      flex-direction: column;
     }
-    
-    .logo-main {
-        font-size: 1.4rem;
-        font-weight: 700;
-        margin: 0;
-        letter-spacing: 1px;
-    }
-    
-    .logo-sub {
-        font-size: 0.9rem;
-        margin: 0;
-        font-weight: 400;
-        letter-spacing: 1.5px;
-    }
-    
-    /* Barra de herramientas */
     .toolbar {
-        display: flex;
-        gap: 10px;
+      display: flex;
+      gap: 0.5rem;
     }
-    
     .tool-btn {
-        background-color: rgba(255,255,255,0.15);
-        border: none;
-        border-radius: 4px;
-        color: white;
-        width: 36px;
-        height: 36px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        transition: all 0.3s ease;
+      background: rgba(255,255,255,0.15);
+      border: none;
+      color: white;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
     }
-    
-    .tool-btn:hover {
-        background-color: var(--accent-red);
-    }
-    
-    /* Contenedor principal */
     .main-container {
-        display: grid;
-        grid-template-columns: 320px 1fr;
-        height: 100%;
+      display: flex;
+      flex: 1;
+      overflow: hidden;
     }
-    
-    /* Panel lateral elegante */
     .side-panel {
-        background-color: var(--panel-bg);
-        padding: 1.5rem;
-        box-shadow: 2px 0 10px rgba(0,0,0,0.1);
-        border-right: 1px solid #e0e0e0;
-        overflow-y: auto;
-        display: flex;
-        flex-direction: column;
-        gap: 1.5rem;
+      width: 280px;
+      background: var(--blanco);
+      border-right: 1px solid #ddd;
+      padding: 1rem;
+      overflow-y: auto;
+      transition: transform 0.3s ease;
     }
-    
-    .panel-section {
-        background-color: white;
-        border-radius: 6px;
-        padding: 1.2rem;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        border-top: 3px solid var(--primary-medium);
+    .side-panel.hidden {
+      transform: translateX(-100%);
     }
-    
-    .panel-title {
-        font-family: 'Montserrat', sans-serif;
-        font-size: 1rem;
-        font-weight: 600;
-        color: var(--primary-dark);
-        margin-top: 0;
-        margin-bottom: 1rem;
-        display: flex;
-        align-items: center;
-        gap: 8px;
+    #toggle-menu {
+      display: none;
+      background: transparent;
+      border: none;
+      color: white;
+      font-size: 1.5rem;
+      margin-right: 0.5rem;
     }
-    
-    .panel-title i {
-        color: var(--accent-red);
-    }
-    
-    /* Elementos de formulario */
-    .search-input {
-        width: 100%;
-        padding: 10px 12px;
-        border: 1px solid #e0e0e0;
-        border-radius: 4px;
-        font-family: 'Lato', sans-serif;
-        transition: all 0.3s ease;
-    }
-    
-    .search-input:focus {
-        outline: none;
-        border-color: var(--primary-medium);
-        box-shadow: 0 0 0 2px rgba(46, 125, 50, 0.2);
-    }
-    
-    /* Mapa */
-    #map-container {
-        position: relative;
-        height: 100%;
-    }
-    
-    #map {
-        width: 100%;
-        height: 100%;
-        background-color: #e8f5e9;
-    }
-    
-    /* Controles del mapa personalizados */
-    .ol-control {
-        background-color: transparent !important;
-        padding: 5px !important;
-    }
-    
-    .ol-control button {
-        background-color: var(--panel-bg) !important;
-        color: var(--primary-dark) !important;
-        border-radius: 4px !important;
-        font-size: 1.1rem !important;
-        border: 1px solid #e0e0e0 !important;
-        transition: all 0.3s ease !important;
-    }
-    
-    .ol-control button:hover {
-        background-color: var(--primary-medium) !important;
-        color: white !important;
-    }
-    
-    /* Popup elegante */
-    .ol-popup {
-        border-radius: 6px !important;
-        box-shadow: 0 3px 14px rgba(0,0,0,0.2) !important;
-        border-top: 3px solid var(--accent-red) !important;
-    }
-    
-    .ol-popup-closer {
-        color: var(--accent-red) !important;
-        text-decoration: none !important;
-        font-size: 1.1rem !important;
-    }
-    
-    /* Capas */
-    .layer-switcher {
-        background-color: transparent !important;
-        box-shadow: none !important;
-    }
-    
-    /* Estilos para impresión */
-    @media print {
-        body * {
-            visibility: hidden;
-        }
-        
-        #map-container, #map-container * {
-            visibility: visible;
-        }
-        
-        #map-container {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-        }
-        
-        .no-print {
-            display: none !important;
-        }
-        
-        @page {
-            size: A4 landscape;
-            margin: 10mm;
-        }
-        
-        .print-header {
-            display: block !important;
-            text-align: center;
-            margin-bottom: 10px;
-            font-family: 'Montserrat', sans-serif;
-            color: var(--primary-dark);
-        }
-    }
-    
-    /* Responsive */
-    @media (max-width: 992px) {
-        .main-container {
-            grid-template-columns: 280px 1fr;
-        }
-    }
-    
     @media (max-width: 768px) {
-        .main-container {
-            grid-template-columns: 1fr;
-            grid-template-rows: auto 1fr;
-        }
-        
-        .side-panel {
-            grid-row: 2;
-            height: 300px;
-            border-right: none;
-            border-top: 1px solid #e0e0e0;
-        }
-        
-        header {
-            padding: 0.8rem 1rem;
-        }
+      .main-container {
+        flex-direction: column;
+      }
+      .side-panel {
+        position: absolute;
+        top: 56px;
+        bottom: 0;
+        left: 0;
+        z-index: 999;
+        background: var(--blanco);
+        box-shadow: 2px 0 10px rgba(0,0,0,0.2);
+      }
+      #toggle-menu {
+        display: block;
+      }
     }
-    </style>
+    #map {
+      flex: 1;
+      height: 100%;
+      background: #e8f5e9;
+    }
+    .panel-section {
+      margin-bottom: 1.5rem;
+      border: 1px solid var(--verde-medio);
+      border-radius: 5px;
+      padding: 1rem;
+    }
+    .panel-section h3 {
+      margin-top: 0;
+      font-size: 1rem;
+      color: var(--verde-oscuro);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .panel-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+    .panel-buttons button {
+      flex: 1 1 45%;
+      padding: 0.5rem;
+      font-size: 0.9rem;
+      border: none;
+      border-radius: 4px;
+      color: white;
+      cursor: pointer;
+    }
+    .btn-verde {
+      background-color: var(--verde-medio);
+    }
+    .btn-verde:hover {
+      background-color: var(--verde-oscuro);
+    }
+    .btn-rojo {
+      background-color: var(--rojo);
+    }
+    .btn-rojo:hover {
+      background-color: #a40000;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      margin-top: 0.5rem;
+    }
+  </style>
 </head>
 <body>
-    <header>
-        <div class="logo-container">
-            <div class="logo-icon">
-                <i class="fas fa-map-marked-alt"></i>
-            </div>
-            <div class="logo-text">
-                <h1 class="logo-main">GEOPORTAL MUNICIPAL</h1>
-                <p class="logo-sub">IPIALES · NARIÑO</p>
-            </div>
-        </div>
-        <div class="toolbar">
-            <button class="tool-btn" id="print-btn" title="Imprimir mapa">
-                <i class="fas fa-print"></i>
-            </button>
-            <button class="tool-btn" title="Pantalla completa" id="fullscreen-btn">
-                <i class="fas fa-expand"></i>
-            </button>
-            <button class="tool-btn" title="Ayuda">
-                <i class="fas fa-question-circle"></i>
-            </button>
-        </div>
-    </header>
-    
-    <div class="main-container">
-        <aside class="side-panel">
-            <div class="panel-section">
-                <h3 class="panel-title">
-                    <i class="fas fa-search"></i>
-                    BÚSQUEDA AVANZADA
-                </h3>
-                <input type="text" class="search-input" placeholder="Coordenadas, dirección...">
-                <div id="search-results" style="margin-top: 10px;"></div>
-            </div>
-            
-            <div class="panel-section">
-                <h3 class="panel-title">
-                    <i class="fas fa-layer-group"></i>
-                    CAPAS GEOESPACIALES
-                </h3>
-                <div id="layer-controls"></div>
-            </div>
-            
-            <div class="panel-section">
-                <h3 class="panel-title">
-                    <i class="fas fa-chart-bar"></i>
-                    HERRAMIENTAS DE ANÁLISIS
-                </h3>
-                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                    <button class="tool-btn" id="measure-btn" style="background-color: var(--primary-medium); color: white;">
-                        <i class="fas fa-ruler"></i>
-                    </button>
-                    <button class="tool-btn" id="area-btn" style="background-color: var(--primary-medium); color: white;">
-                        <i class="fas fa-ruler-combined"></i>
-                    </button>
-                    <button class="tool-btn" id="draw-btn" style="background-color: var(--primary-medium); color: white;">
-                        <i class="fas fa-draw-polygon"></i>
-                    </button>
-                    <button class="tool-btn" id="clear-btn" style="background-color: var(--accent-red); color: white;">
-                        <i class="fas fa-trash-alt"></i>
-                    </button>
-                </div>
-            </div>
-            
-            <div class="panel-section">
-                <h3 class="panel-title">
-                    <i class="fas fa-info-circle"></i>
-                    INFORMACIÓN
-                </h3>
-                <div id="feature-info">
-                    <p style="margin: 0; color: var(--primary-dark); font-style: italic;">
-                        Seleccione un elemento en el mapa para ver detalles
-                    </p>
-                </div>
-            </div>
-        </aside>
-        
-        <main id="map-container">
-            <!-- Cabecera para impresión (oculta inicialmente) -->
-            <div class="print-header no-print" style="display: none;">
-                <h2>Geoportal Municipal de Ipiales</h2>
-                <p>Mapa generado el <span id="print-date"></span></p>
-            </div>
-            
-            <div id="map">
-                <div id="popup" class="ol-popup">
-                    <a href="#" id="popup-closer" class="ol-popup-closer"></a>
-                    <div id="popup-content"></div>
-                </div>
-            </div>
-        </main>
+  <header>
+    <div class="logo-container">
+      <button id="toggle-menu"><i class="fas fa-bars"></i></button>
+      <i class="fas fa-map-marked-alt"></i>
+      <div class="logo-text">
+        <strong>GEOPORTAL MUNICIPAL</strong>
+        <small>IPIALES · NARIÑO</small>
+      </div>
     </div>
-
-    <!-- Scripts de QGIS2Web -->
-    <script src="resources/qgis2web_expressions.js"></script>
-    <script src="./resources/functions.js"></script>
-    <script src="./resources/ol.js"></script>
-    <script src="./resources/ol-layerswitcher.js"></script>
-    <!-- Capas -->
-    <script src="layers/Manzanas_1.js"></script>
-    <script src="layers/Suelo_suburbano_2.js"></script>
-    <script src="layers/Construcciones_3.js"></script>
-    <script src="layers/Municipios_colindantes_4.js"></script>
-    <script src="layers/Base_predial_urbana_5.js"></script>
-    <script src="layers/Drenaje_sencillo_6.js"></script>
-    <script src="layers/Base_predial_rural_7.js"></script>
-    <script src="layers/Red_vial_U_8.js"></script>
-    <script src="layers/Red_vial_R_9.js"></script>
-    <script src="layers/Drenaje_doble_10.js"></script>
-    <script src="layers/Limite_municipal_11.js"></script>
-    <script src="layers/Perimetro_urbano_12.js"></script>
-    <!-- Estilos -->
-    <script src="styles/Manzanas_1_style.js"></script>
-    <script src="styles/Suelo_suburbano_2_style.js"></script>
-    <script src="styles/Construcciones_3_style.js"></script>
-    <script src="styles/Municipios_colindantes_4_style.js"></script>
-    <script src="styles/Base_predial_urbana_5_style.js"></script>
-    <script src="styles/Drenaje_sencillo_6_style.js"></script>
-    <script src="styles/Base_predial_rural_7_style.js"></script>
-    <script src="styles/Red_vial_U_8_style.js"></script>
-    <script src="styles/Red_vial_R_9_style.js"></script>
-    <script src="styles/Drenaje_doble_10_style.js"></script>
-    <script src="styles/Limite_municipal_11_style.js"></script>
-    <script src="styles/Perimetro_urbano_12_style.js"></script>
-    <script src="./layers/layers.js" type="text/javascript"></script> 
-    <script src="./resources/Autolinker.min.js"></script>
-    <script src="./resources/qgis2web.js"></script>
-    
-    <!-- Scripts para funcionalidad mejorada -->
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Integrar controles generados por QGIS2Web
-        const layerSwitcher = document.querySelector('.layer-switcher');
-        if (layerSwitcher) {
-            document.getElementById('layer-controls').appendChild(layerSwitcher);
-            layerSwitcher.style.backgroundColor = 'transparent';
-            layerSwitcher.style.boxShadow = 'none';
-        }
-        
-        // Configurar botón de medida
-        const measureBtn = document.getElementById('measure-btn');
-        if (measureBtn && typeof measure !== 'undefined') {
-            measureBtn.addEventListener('click', function() {
-                measure.setActive(!measure.getActive());
-            });
-        }
-        
-        // Configurar botón de área
-        const areaBtn = document.getElementById('area-btn');
-        if (areaBtn && typeof measureArea !== 'undefined') {
-            areaBtn.addEventListener('click', function() {
-                measureArea.setActive(!measureArea.getActive());
-            });
-        }
-        
-        // Configurar botón de dibujo
-        const drawBtn = document.getElementById('draw-btn');
-        if (drawBtn && typeof draw !== 'undefined') {
-            drawBtn.addEventListener('click', function() {
-                draw.setActive(!draw.getActive());
-            });
-        }
-        
-        // Configurar botón de limpiar
-        const clearBtn = document.getElementById('clear-btn');
-        if (clearBtn) {
-            clearBtn.addEventListener('click', function() {
-                // Implementa la lógica para limpiar dibujos/mediciones
-                if (typeof measure !== 'undefined') measure.setActive(false);
-                if (typeof measureArea !== 'undefined') measureArea.setActive(false);
-                if (typeof draw !== 'undefined') draw.setActive(false);
-            });
-        }
-        
-        // Búsqueda con Nominatim
-        const searchInput = document.querySelector('.search-input');
-        if (searchInput) {
-            searchInput.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    const query = this.value.trim();
-                    if (query.length > 2) {
-                        fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=5`)
-                            .then(response => response.json())
-                            .then(data => {
-                                const resultsContainer = document.getElementById('search-results');
-                                resultsContainer.innerHTML = '';
-                                
-                                if (data.length === 0) {
-                                    resultsContainer.innerHTML = '<p style="color: var(--accent-red);">No se encontraron resultados</p>';
-                                    return;
-                                }
-                                
-                                data.forEach(item => {
-                                    const resultItem = document.createElement('div');
-                                    resultItem.style.padding = '10px';
-                                    resultItem.style.marginBottom = '8px';
-                                    resultItem.style.backgroundColor = 'var(--light-bg)';
-                                    resultItem.style.borderRadius = '4px';
-                                    resultItem.style.borderLeft = '3px solid var(--primary-medium)';
-                                    resultItem.style.cursor = 'pointer';
-                                    resultItem.style.transition = 'all 0.3s ease';
-                                    resultItem.innerHTML = `
-                                        <div style="font-weight: 600; color: var(--primary-dark);">${item.display_name.split(',')[0]}</div>
-                                        <div style="font-size: 0.8rem; color: var(--accent-dark);">${item.display_name.split(',').slice(1).join(',')}</div>
-                                    `;
-                                    
-                                    resultItem.addEventListener('mouseenter', function() {
-                                        this.style.backgroundColor = 'var(--primary-light)';
-                                        this.style.color = 'white';
-                                    });
-                                    
-                                    resultItem.addEventListener('mouseleave', function() {
-                                        this.style.backgroundColor = 'var(--light-bg)';
-                                        this.style.color = 'inherit';
-                                    });
-                                    
-                                    resultItem.addEventListener('click', function() {
-                                        const view = map.getView();
-                                        view.setCenter(ol.proj.fromLonLat([parseFloat(item.lon), parseFloat(item.lat)]));
-                                        view.setZoom(16);
-                                        document.getElementById('search-results').innerHTML = '';
-                                        searchInput.value = '';
-                                    });
-                                    
-                                    resultsContainer.appendChild(resultItem);
-                                });
-                            });
-                    }
-                }
-            });
-        }
-        
-        // Función para imprimir el mapa
-        const printBtn = document.getElementById('print-btn');
-        if (printBtn) {
-            printBtn.addEventListener('click', function() {
-                // Actualizar fecha en el encabezado de impresión
-                const now = new Date();
-                document.getElementById('print-date').textContent = now.toLocaleDateString('es-CO', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit'
-                });
-                
-                // Mostrar el encabezado de impresión
-                document.querySelector('.print-header').classList.remove('no-print');
-                
-                // Crear un clon del mapa para imprimir
-                const printContainer = document.createElement('div');
-                printContainer.id = 'print-map-container';
-                printContainer.style.position = 'absolute';
-                printContainer.style.left = '-9999px';
-                document.body.appendChild(printContainer);
-                
-                // Obtener el estado actual del mapa
-                const currentView = map.getView();
-                const center = currentView.getCenter();
-                const zoom = currentView.getZoom();
-                const layers = map.getLayers();
-                
-                // Crear un mapa temporal para imprimir
-                const printMap = new ol.Map({
-                    target: 'print-map-container',
-                    layers: layers,
-                    view: new ol.View({
-                        center: center,
-                        zoom: zoom,
-                        projection: currentView.getProjection()
-                    }),
-                    controls: []
-                });
-                
-                // Esperar a que el mapa se renderice
-                setTimeout(function() {
-                    // Activar la impresión
-                    window.print();
-                    
-                    // Limpiar después de imprimir
-                    printMap.setTarget(undefined);
-                    printContainer.remove();
-                    document.querySelector('.print-header').classList.add('no-print');
-                }, 500);
-            });
-        }
-        
-        // Pantalla completa
-        const fullscreenBtn = document.getElementById('fullscreen-btn');
-        if (fullscreenBtn) {
-            fullscreenBtn.addEventListener('click', function() {
-                if (!document.fullscreenElement) {
-                    document.documentElement.requestFullscreen().catch(err => {
-                        console.error(`Error al intentar pantalla completa: ${err.message}`);
-                    });
-                } else {
-                    if (document.exitFullscreen) {
-                        document.exitFullscreen();
-                    }
-                }
-            });
-        }
-        
-        // Mejorar popups
-        const popup = document.getElementById('popup');
-        const popupContent = document.getElementById('popup-content');
-        const popupCloser = document.getElementById('popup-closer');
-        
-        if (popupCloser) {
-            popupCloser.onclick = function() {
-                popup.style.display = 'none';
-                return false;
-            };
-        }
+    <div class="toolbar">
+      <button class="tool-btn" id="print-btn" title="Imprimir mapa"><i class="fas fa-print"></i></button>
+      <button class="tool-btn" title="Pantalla completa" id="fullscreen-btn"><i class="fas fa-expand"></i></button>
+      <button class="tool-btn" title="Ayuda"><i class="fas fa-question-circle"></i></button>
+    </div>
+  </header>
+  <div class="main-container">
+    <aside class="side-panel" id="sidePanel">
+      <div class="panel-section">
+        <h3><i class="fas fa-search"></i> BÚSQUEDA AVANZADA</h3>
+        <input type="text" id="search-input" placeholder="Coordenadas, dirección..." />
+      </div>
+      <div class="panel-section">
+        <h3><i class="fas fa-layer-group"></i> CAPAS GEOESPACIALES</h3>
+        <div id="layer-controls"></div>
+      </div>
+      <div class="panel-section">
+        <h3><i class="fas fa-chart-bar"></i> HERRAMIENTAS DE ANÁLISIS</h3>
+        <div class="panel-buttons">
+          <button class="btn-verde" id="measure-btn"><i class="fas fa-ruler"></i></button>
+          <button class="btn-verde" id="area-btn"><i class="fas fa-ruler-combined"></i></button>
+          <button class="btn-verde" id="draw-btn"><i class="fas fa-draw-polygon"></i></button>
+          <button class="btn-rojo" id="clear-btn"><i class="fas fa-trash-alt"></i></button>
+        </div>
+      </div>
+      <div class="panel-section">
+        <h3><i class="fas fa-info-circle"></i> INFORMACIÓN</h3>
+        <p style="font-style: italic; font-size: 0.9rem;">Seleccione un elemento en el mapa para ver detalles</p>
+      </div>
+    </aside>
+    <main id="map"></main>
+  </div>
+  <!-- SCRIPTS INTEGRADOS DEL GEO PORTAL -->
+  <script src="resources/qgis2web_expressions.js"></script>
+  <script src="./resources/functions.js"></script>
+  <script src="./resources/ol.js"></script>
+  <script src="./resources/ol-layerswitcher.js"></script>
+  <script src="layers/Manzanas_1.js"></script>
+  <script src="layers/Suelo_suburbano_2.js"></script>
+  <script src="layers/Construcciones_3.js"></script>
+  <script src="layers/Municipios_colindantes_4.js"></script>
+  <script src="layers/Base_predial_urbana_5.js"></script>
+  <script src="layers/Drenaje_sencillo_6.js"></script>
+  <script src="layers/Base_predial_rural_7.js"></script>
+  <script src="layers/Red_vial_U_8.js"></script>
+  <script src="layers/Red_vial_R_9.js"></script>
+  <script src="layers/Drenaje_doble_10.js"></script>
+  <script src="layers/Limite_municipal_11.js"></script>
+  <script src="layers/Perimetro_urbano_12.js"></script>
+  <script src="styles/Manzanas_1_style.js"></script>
+  <script src="styles/Suelo_suburbano_2_style.js"></script>
+  <script src="styles/Construcciones_3_style.js"></script>
+  <script src="styles/Municipios_colindantes_4_style.js"></script>
+  <script src="styles/Base_predial_urbana_5_style.js"></script>
+  <script src="styles/Drenaje_sencillo_6_style.js"></script>
+  <script src="styles/Base_predial_rural_7_style.js"></script>
+  <script src="styles/Red_vial_U_8_style.js"></script>
+  <script src="styles/Red_vial_R_9_style.js"></script>
+  <script src="styles/Drenaje_doble_10_style.js"></script>
+  <script src="styles/Limite_municipal_11_style.js"></script>
+  <script src="styles/Perimetro_urbano_12_style.js"></script>
+  <script src="./layers/layers.js"></script>
+  <script src="./resources/Autolinker.min.js"></script>
+  <script src="./resources/qgis2web.js"></script>
+  <script>
+    document.getElementById("toggle-menu").addEventListener("click", function() {
+      document.getElementById("sidePanel").classList.toggle("hidden");
     });
-    </script>
+
+    document.getElementById("fullscreen-btn").addEventListener("click", () => {
+      if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+      else document.exitFullscreen();
+    });
+
+    const source = new ol.source.Vector();
+    const drawLayer = new ol.layer.Vector({ source: source });
+    const map = new ol.Map({
+      target: 'map',
+      layers: [
+        new ol.layer.Tile({ source: new ol.source.OSM() }),
+        drawLayer
+      ],
+      view: new ol.View({ center: ol.proj.fromLonLat([-77.64, 0.83]), zoom: 13 })
+    });
+
+    let drawInteraction;
+
+    document.getElementById("measure-btn").addEventListener("click", () => {
+      map.removeInteraction(drawInteraction);
+      drawInteraction = new ol.interaction.Draw({ source, type: 'LineString' });
+      map.addInteraction(drawInteraction);
+    });
+
+    document.getElementById("area-btn").addEventListener("click", () => {
+      map.removeInteraction(drawInteraction);
+      drawInteraction = new ol.interaction.Draw({ source, type: 'Polygon' });
+      map.addInteraction(drawInteraction);
+    });
+
+    document.getElementById("draw-btn").addEventListener("click", () => {
+      map.removeInteraction(drawInteraction);
+      drawInteraction = new ol.interaction.Draw({ source, type: 'Point' });
+      map.addInteraction(drawInteraction);
+    });
+
+    document.getElementById("clear-btn").addEventListener("click", () => {
+      source.clear();
+      map.removeInteraction(drawInteraction);
+    });
+  </script>
 </body>
 </html>
